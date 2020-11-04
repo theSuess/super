@@ -14,6 +14,7 @@ import (
 	"time"
 
 	jwt "github.com/cristalhq/jwt/v3"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
@@ -52,6 +53,7 @@ func main() {
 	}
 
 	r := gin.Default()
+	r.Use(cors.Default())
 
 	withAuth := func(c *gin.Context) {
 		token := c.GetHeader("X-Auth-Token")
@@ -134,6 +136,13 @@ func main() {
 		if submission.Name == "" {
 			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 				"error": "name must not be empty",
+			})
+			return
+		}
+
+		if len(files) == 0 {
+			c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+				"error": "you must upload at least one file",
 			})
 			return
 		}
