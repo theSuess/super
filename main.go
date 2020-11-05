@@ -53,7 +53,11 @@ func main() {
 	}
 
 	r := gin.Default()
-	r.Use(cors.Default())
+	crs := cors.DefaultConfig()
+	crs.AllowAllOrigins = true
+	crs.AddAllowHeaders("X-Auth-Token")
+	crs.AddExposeHeaders("X-Download-Token")
+	r.Use(cors.New(crs))
 
 	withAuth := func(c *gin.Context) {
 		token := c.GetHeader("X-Auth-Token")
