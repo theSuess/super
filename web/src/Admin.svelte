@@ -58,7 +58,7 @@
                                 <ul>
                                 {#each Object.entries(sub.files) as [id,name]}
                                     <li class="text-teal-500 hover:text-teal-700">
-                                        <a href="__backendHost__/download/{sub.id}/{id}?token={token}&name={name}">{ name }</a>
+                                        <a href="__backendHost__/download/{sub.id}/{id}?token={token}&name={name}" tinro-ignore>{ name }</a>
                                     </li>
                                 {/each}
                                 </ul>

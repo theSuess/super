@@ -15,6 +15,7 @@ import (
 
 	jwt "github.com/cristalhq/jwt/v3"
 	"github.com/gin-contrib/cors"
+	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"github.com/rs/zerolog/log"
@@ -69,7 +70,7 @@ func main() {
 		}
 		c.Next()
 	}
-
+	r.Use(static.Serve("/", static.LocalFile("./web/public", false)))
 	r.GET("/download/:submission/:file", func(c *gin.Context) {
 		token, err := jwt.ParseAndVerifyString(c.Query("token"), jwtVerifier)
 		if err != nil {
@@ -94,6 +95,9 @@ func main() {
 	r.GET("/list", withAuth, func(c *gin.Context) {
 		submissions := []SubmissionMeta{}
 		err := filepath.Walk(datadir, func(path string, info os.FileInfo, err error) error {
+			if err != nil {
+				return err
+			}
 			if info.Name() != "meta.json" {
 				return nil
 			}
